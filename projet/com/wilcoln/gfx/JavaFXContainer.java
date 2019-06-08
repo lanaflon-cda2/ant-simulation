@@ -1,25 +1,11 @@
 package com.wilcoln.gfx;
 
-import static com.wilcoln.config.Config.*;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import com.wilcoln.Anthill;
 import com.wilcoln.Environment;
 import com.wilcoln.Termite;
-import com.wilcoln.utils.Time;
 import com.wilcoln.ToricPosition;
 import com.wilcoln.app.Context;
+import com.wilcoln.utils.Time;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -37,6 +23,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static com.wilcoln.config.Config.*;
 
 public final class JavaFXContainer extends javafx.application.Application {
 	

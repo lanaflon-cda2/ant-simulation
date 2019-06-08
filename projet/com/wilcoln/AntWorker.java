@@ -9,13 +9,11 @@ public class AntWorker extends Ant {
 
 	public AntWorker(ToricPosition tp, Uid aId) {
 		super(tp, Context.getConfig().getInt(Config.ANT_WORKER_HP), Context.getConfig().getTime(Config.ANT_WORKER_LIFESPAN), aId);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void accept(AnimalVisitor visitor, RenderingMedia s) {
 		visitor.visit(this, s);
-
 	}
 
 	@Override

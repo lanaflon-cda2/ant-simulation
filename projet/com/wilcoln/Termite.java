@@ -11,7 +11,7 @@ public final class Termite extends Animal {
 
 	@Override
 	public void accept(AnimalVisitor visitor, RenderingMedia s) {
-		// TODO Auto-generated method stub
+		visitor.visit(this,s);
 
 	}
 

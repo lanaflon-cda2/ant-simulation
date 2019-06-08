@@ -59,7 +59,7 @@ public class Main {
         
         
         
-        // Etape 2
+        // Quelques tests pour l'étape 2
         Food f1 = new Food(tp2, 4.7);
         Food f2 = new Food(tp3, 6.7);
         System.out.println();

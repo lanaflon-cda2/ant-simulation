@@ -1,1 +1,1 @@
-Il s’agit de la simulation de colonies d’insectes sociauxet plus précisément celui de fourmilières.
+Il s’agit de la simulation de colonies d’insectes sociaux et plus précisément celui de fourmilières.
