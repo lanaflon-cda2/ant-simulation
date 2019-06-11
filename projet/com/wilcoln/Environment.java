@@ -49,14 +49,18 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 	public void update(Time dt) {
 		foodGenerator.update(this, dt);
 		//Parcours mise à jour et suppression d'animaux
-				Iterator<Animal> AIterator = animals.iterator();
-				while(AIterator.hasNext()) {
-					Animal animal = AIterator.next();
-					if(animal.isDead()) 
-						AIterator.remove();
-					else 
-						animal.update(this, dt);
-				}
+		Iterator<Animal> AIterator = animals.iterator();
+		while(AIterator.hasNext()) {
+			Animal animal = AIterator.next();
+			if(animal.isDead())
+				AIterator.remove();
+			else
+				animal.update(this, dt);
+		}
+		//Parcours mise à jour fourmillières
+		for (Anthill anthill : anthills) {
+			anthill.update(this, dt);
+		}
 		//Supprime les nourritures épuisées
 		foods.removeIf(food -> food.getQuantity() <= 0);
 	}
@@ -96,13 +100,22 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 	public boolean dropFood(AntWorker antWorker) {
 		Utils.requireNonNull(antWorker);
 		Anthill anthill = null;
-		Iterator<Anthill> iterator = anthills.iterator();
-		while(iterator.hasNext()) {
-			anthill = iterator.next();
-			if(anthill.getAnthillId().equals(antWorker.getAnthillId()))
-					break;
+		for (Anthill value : anthills) {
+			anthill = value;
+			if (anthill.getAnthillId().equals(antWorker.getAnthillId()))
+				break;
 		}
 		return anthill == null ? false : antWorker.getPosition().toricDistance(anthill.getPosition()) <= Context.getConfig().getDouble(Config.ANT_MAX_PERCEPTION_DISTANCE);
+	}
+
+	@Override
+	public void selectSpecificBehaviorDispatch(AntWorker antWorker, Time dt) {
+		antWorker.seekForFood(this, dt);
+	}
+
+	@Override
+	public void selectSpecificBehaviorDispatch(AntSoldier antSoldier, Time dt) {
+		antSoldier.seekForEnemies(this, dt);
 	}
 
 

@@ -2,8 +2,9 @@ package com.wilcoln;
 
 import com.wilcoln.app.Context;
 import com.wilcoln.config.Config;
+import com.wilcoln.utils.Time;
 
-public class AntWorker extends Ant {
+public final class AntWorker extends Ant{
 
 	private double foodQuantity = 0;
 
@@ -23,8 +24,17 @@ public class AntWorker extends Ant {
 	public double getFoodQuantity() {
 		return this.foodQuantity;
 	}
+	void seekForFood(AntWorkerEnvironmentView env, Time dt){
+		move(dt);
+	}
 	public String toString() {
 		return super.toString() + "\nQuantity : " + foodQuantity;
 	}
 
+	@Override
+	public void specificBehaviorDispatch(AnimalEnvironmentView env, Time dt) {
+		// A ce moment là, on sait que l'on à affaire à un AntWorker.
+		// Grâce à l'appel suivant, on informe AnimalEnvironmentView de notre type !
+		env.selectSpecificBehaviorDispatch(this, dt);
+	}
 }

@@ -26,6 +26,7 @@ public abstract class Animal extends Positionable{
 	}
 	public abstract double getSpeed();
 	public abstract void accept(AnimalVisitor visitor, RenderingMedia s);
+	public abstract void specificBehaviorDispatch(AnimalEnvironmentView env, Time dt);
 	public String toString() {
 		return this.getPosition().toString() + "\nSpeed : " + getSpeed() + "\nHitPoints : " + hitpoints + "\nLifeSpan : " + lifespan.toSeconds();
 	}
@@ -41,11 +42,11 @@ public abstract class Animal extends Positionable{
 	public final Time getLifespan() {
 		return this.lifespan;
 	}
-	public void update(AnimalEnvironmentView env, Time dt) {
+	public final void update(AnimalEnvironmentView env, Time dt) {
 		double lifespanDecreaseFactor = Context.getConfig().getDouble(Config.ANIMAL_LIFESPAN_DECREASE_FACTOR);
 		this.lifespan = this.lifespan.minus(dt.times(lifespanDecreaseFactor));
 		if(lifespan.isPositive()) {
-			this.move(dt);
+			this.specificBehaviorDispatch(env, dt);
 		}
 	}
 	protected final void move(Time dt) {
