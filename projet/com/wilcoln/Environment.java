@@ -64,6 +64,7 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 	public void renderEntities(EnvironmentRenderer environmentRenderer) {
 		foods.forEach(environmentRenderer::renderFood);
 		animals.forEach(environmentRenderer::renderAnimal);
+		anthills.forEach(environmentRenderer::renderAnthill);
 	}
 	public int getWidth() {
 		return Context.getConfig().getInt(Config.WORLD_WIDTH);

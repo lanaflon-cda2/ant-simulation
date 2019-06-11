@@ -4,7 +4,7 @@ import static com.wilcoln.config.Config.*;
 
 import com.wilcoln.utils.Utils;
 
-public final class Anthill extends Positionable {
+public final class Anthill extends Positionable implements AnthillEnvironmentView {
 	
 	private double foodQuantity;
 	private Uid id;
@@ -31,5 +31,10 @@ public final class Anthill extends Positionable {
 	}
 	public String toString() {
 		return super.toString() + "\nQuantity : " + foodQuantity;
+	}
+
+	@Override
+	public void addAnt(Ant ant) throws IllegalArgumentException {
+
 	}
 }
