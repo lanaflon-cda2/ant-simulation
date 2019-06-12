@@ -3,6 +3,7 @@ package ch.epfl.moocprog;
 import ch.epfl.moocprog.app.Context;
 import ch.epfl.moocprog.config.Config;
 import ch.epfl.moocprog.utils.Time;
+import ch.epfl.moocprog.utils.Utils;
 
 public final class AntWorker extends Ant{
 
@@ -25,6 +26,17 @@ public final class AntWorker extends Ant{
 		return this.foodQuantity;
 	}
 	void seekForFood(AntWorkerEnvironmentView env, Time dt){
+		if(foodQuantity == 0){
+			Food food = env.getClosestFoodForAnt(this);
+			if(food != null && getPosition().toricDistance(food.getPosition()) <= Context.getConfig().getDouble(Config.ANT_MAX_PERCEPTION_DISTANCE)){
+				foodQuantity += food.takeQuantity(Context.getConfig().getDouble(Config.ANT_MAX_FOOD));
+				// Faire demi tour
+				double nouvelAngle = getDirection() + Math.PI;
+				nouvelAngle = ((2 * Math.PI) < nouvelAngle) ? (nouvelAngle - (2 * Math.PI)) : nouvelAngle;
+				setDirection(nouvelAngle);
+			}
+		}
+		foodQuantity = env.dropFood(this) ? 0 : foodQuantity;
 		move(dt);
 	}
 	public String toString() {
