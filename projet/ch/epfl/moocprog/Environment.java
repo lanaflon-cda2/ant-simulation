@@ -1,8 +1,6 @@
 package ch.epfl.moocprog;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import ch.epfl.moocprog.app.Context;
 import ch.epfl.moocprog.config.Config;
@@ -16,11 +14,13 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 	private List<Food> foods;
 	private List<Animal> animals;
 	private List<Anthill> anthills;
+	private List<Pheromone> pheromones;
 	
 	public Environment() {
-		foods = new LinkedList<Food>();
-		animals = new LinkedList<Animal>();
-		anthills = new LinkedList<Anthill>();
+		foods = new LinkedList<>();
+		animals = new LinkedList<>();
+		anthills = new LinkedList<>();
+		pheromones = new LinkedList<>();
 		foodGenerator = new FoodGenerator();
 	}
 	@Override
@@ -48,6 +48,9 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 	
 	public void update(Time dt) {
 		foodGenerator.update(this, dt);
+		for(Pheromone pheromone: pheromones)
+			pheromone.update(dt);
+		pheromones.removeIf(Pheromone::isNegligible);
 		//Parcours mise à jour et suppression d'animaux
 		Iterator<Animal> AIterator = animals.iterator();
 		while(AIterator.hasNext()) {
@@ -77,7 +80,7 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 		return Context.getConfig().getInt(Config.WORLD_HEIGHT);
 	}
 	public List<ToricPosition> getAnimalsPosition(){
-		List<ToricPosition> listPositions = new LinkedList<ToricPosition>();
+		List<ToricPosition> listPositions = new LinkedList<>();
 		for(Animal a: animals) {
 			listPositions.add(a.getPosition());
 		}
@@ -119,4 +122,47 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 	}
 
 
+	@Override
+	public void addPheromone(Pheromone pheromone) throws IllegalArgumentException{
+		Utils.requireNonNull(pheromone);
+		pheromones.add(pheromone);
+	}
+
+	private static double normalizedAngle(double angle){
+		while(angle < 0)
+			angle += 2*Math.PI;
+		while(angle > 2*Math.PI)
+			angle -= 2*Math.PI;
+		return angle;
+	}
+	private static double closestAngleFrom(double angle, double target){
+		double diff = angle - target;
+		diff = normalizedAngle(diff);
+		return Math.min(diff, 2*Math.PI - diff);
+	}
+	@Override
+	public double[] getPheromoneQuantitiesPerIntervalForAnt(ToricPosition position, double directionAngleRad, double[] angles) {
+		double[] pheromoneQuantities = new double[angles.length];
+		for(Pheromone pheromone: pheromones){
+			if(!pheromone.isNegligible())
+				if(position.toricDistance(pheromone.getPosition()) <= Context.getConfig().getDouble(Config.ANT_SMELL_MAX_DISTANCE)){
+					double beta = position.toricVector(pheromone.getPosition()).angle() - directionAngleRad;
+					int min_index = 0;
+					for(int i = 0; i < angles.length; i++){
+						if(closestAngleFrom(angles[min_index], beta) > closestAngleFrom(angles[i], beta))
+							min_index = i;
+					}
+					pheromoneQuantities[min_index] += pheromone.getQuantity();
+				}
+		}
+		return pheromoneQuantities;
+	}
+
+	public List<Double> getPheromonesQuantities(){
+			List<Double> pheromonesQuantities = new LinkedList<>();
+			for(Pheromone pheromone: pheromones){
+				pheromonesQuantities.add(pheromone.getQuantity());
+			}
+			return pheromonesQuantities;
+	}
 }
