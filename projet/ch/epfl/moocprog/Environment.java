@@ -8,7 +8,7 @@ import ch.epfl.moocprog.gfx.EnvironmentRenderer;
 import ch.epfl.moocprog.utils.Time;
 import ch.epfl.moocprog.utils.Utils;
 
-public final class Environment implements FoodGeneratorEnvironmentView, AnimalEnvironmentView, AnthillEnvironmentView, AntEnvironmentView, AntWorkerEnvironmentView {
+public final class Environment implements FoodGeneratorEnvironmentView, AnimalEnvironmentView, AnthillEnvironmentView, AntEnvironmentView, AntWorkerEnvironmentView, TermiteEnvironmentView {
 
 	private FoodGenerator foodGenerator;
 	private List<Food> foods;
@@ -72,6 +72,7 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 		foods.forEach(environmentRenderer::renderFood);
 		animals.forEach(environmentRenderer::renderAnimal);
 		anthills.forEach(environmentRenderer::renderAnthill);
+		pheromones.forEach(environmentRenderer::renderPheromone);
 	}
 	public int getWidth() {
 		return Context.getConfig().getInt(Config.WORLD_WIDTH);
@@ -121,6 +122,10 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 		antSoldier.seekForEnemies(this, dt);
 	}
 
+	@Override
+	public void selectSpecificBehaviorDispatch(Termite termite, Time dt) {
+		termite.seekForEnemies(this, dt);
+	}
 
 	@Override
 	public void addPheromone(Pheromone pheromone) throws IllegalArgumentException{
@@ -141,7 +146,9 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 		return Math.min(diff, 2*Math.PI - diff);
 	}
 	@Override
-	public double[] getPheromoneQuantitiesPerIntervalForAnt(ToricPosition position, double directionAngleRad, double[] angles) {
+	public double[] getPheromoneQuantitiesPerIntervalForAnt(ToricPosition position, double directionAngleRad, double[] angles) throws IllegalArgumentException {
+		Utils.requireNonNull(angles);
+		Utils.requireNonNull(position);
 		double[] pheromoneQuantities = new double[angles.length];
 		for(Pheromone pheromone: pheromones){
 			if(!pheromone.isNegligible())
@@ -164,5 +171,41 @@ public final class Environment implements FoodGeneratorEnvironmentView, AnimalEn
 				pheromonesQuantities.add(pheromone.getQuantity());
 			}
 			return pheromonesQuantities;
+	}
+
+	@Override
+	public RotationProbability selectComputeRotationProbsDispatch(Ant ant) {
+		return ant.computeRotationProbs(this);
+	}
+
+	@Override
+	public RotationProbability selectComputeRotationProbsDispatch(Termite termite) {
+		return termite.computeRotationProbs(this);
+	}
+
+	@Override
+	public void selectAfterMoveDispatch(Ant ant, Time dt) {
+		ant.afterMoveAnt(this, dt);
+	}
+
+
+	@Override
+	public void selectAfterMoveDispatch(Termite termite, Time dt) {
+		termite.afterMoveTermite(this, dt);
+	}
+
+	@Override
+	public List<Animal> getVisibleEnemiesForAnimal(Animal from) {
+		List<Animal> visibleEnemies = new LinkedList<>();
+		for(Animal animal: animals){
+			if(from.isEnemy(animal) && from.getPosition().toricDistance(animal.getPosition()) <= Context.getConfig().getDouble(Config.ANIMAL_SIGHT_DISTANCE))
+				visibleEnemies.add(animal);
+		}
+		return visibleEnemies;
+	}
+
+	@Override
+	public boolean isVisibleFromEnemies(Animal from) {
+		return !getVisibleEnemiesForAnimal(from).isEmpty();
 	}
 }

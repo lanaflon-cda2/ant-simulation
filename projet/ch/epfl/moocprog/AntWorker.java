@@ -12,6 +12,9 @@ public final class AntWorker extends Ant{
 	public AntWorker(ToricPosition tp, Uid aId) {
 		super(tp, Context.getConfig().getInt(Config.ANT_WORKER_HP), Context.getConfig().getTime(Config.ANT_WORKER_LIFESPAN), aId);
 	}
+	public AntWorker(ToricPosition tp, Uid aId, AntRotationProbabilityModel aPm) {
+		super(tp, Context.getConfig().getInt(Config.ANT_WORKER_HP), Context.getConfig().getTime(Config.ANT_WORKER_LIFESPAN), aId, aPm);
+	}
 
 	@Override
 	public void accept(AnimalVisitor visitor, RenderingMedia s) {
@@ -37,7 +40,7 @@ public final class AntWorker extends Ant{
 			}
 		}
 		foodQuantity = env.dropFood(this) ? 0 : foodQuantity;
-		move(dt);
+		move(env, dt);
 	}
 	public String toString() {
 		return super.toString() + "\nQuantity : " + foodQuantity;
@@ -48,5 +51,19 @@ public final class AntWorker extends Ant{
 		// A ce moment là, on sait que l'on à affaire à un AntWorker.
 		// Grâce à l'appel suivant, on informe AnimalEnvironmentView de notre type !
 		env.selectSpecificBehaviorDispatch(this, dt);
+	}
+	@Override
+	public int getMinAttackStrength() {
+		return Context.getConfig().getInt(Config.ANT_WORKER_MIN_STRENGTH);
+	}
+
+	@Override
+	public int getMaxAttackStrength() {
+		return Context.getConfig().getInt(Config.ANT_WORKER_MAX_STRENGTH);
+	}
+
+	@Override
+	public Time getMaxAttackDuration() {
+		return Context.getConfig().getTime(Config.ANT_WORKER_ATTACK_DURATION);
 	}
 }
