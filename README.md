@@ -1,7 +1,7 @@
 # 1. Description de l'application
-Le thème du projet est la simulation de colonies d’insectes sociaux et plus précisément celui de fourmilières, tel qu’illustré en figure 1. La notion d’intelligence collective constitut tout l'intérêt de cette thématique : chaque membre de la colonie n’obéit individuellement qu’à des règles comportementales très simples, mais il émerge de ces comportements simples une auto-organisation complexe et « intelligente » de la colonie, permettant typiquement la survie de la fourmilière dans notre cas.
+Le thème du projet est la simulation de colonies d’insectes sociaux et plus précisément celui de fourmilières. La notion d’intelligence collective constitut tout l'intérêt de cette thématique : chaque membre de la colonie n’obéit individuellement qu’à des règles comportementales très simples, mais il émerge de ces comportements simples une auto-organisation complexe et « intelligente » de la colonie, permettant typiquement la survie de la fourmilière dans notre cas.
 
-Le but du projet est donc de créer une application simulant des colonies de fourmis en quête de nourriture. La figure 1 donne un exemple d’état possible dela simulation à produire.
+Le but du projet est donc de créer une application simulant des colonies de fourmis en quête de nourriture.
 Le modèle que nous proposons est simmplement constitué:
 - **d'un environnement**
 - **de fourmilières**
@@ -21,9 +21,6 @@ Deux modes de déplacement sont possibles pour les animaux simulés (fourmis ou 
 - **le déplacement sensoriel**: utilisé par les fourmis pour suivre les traces dephéromone déposées dans l’environnement.
 
 L’environnement est modélisé comme un terrain rectangulaire en deux dimensions.Il est cependant géré de façon torique: les animaux dépassant les limites del’environnement par un côté réapparaîtront sur le côté opposé.
-
-A titre d’exemple, on peut voir sur la figure 1 un environnement contenant des fourmilières (petits tas de terre), des fourmis ouvrières (en noir), soldates (en  rouge) et des termites (brunes bicolores). Les fourmis laissent sur le sol des traces de phéromone (en vert) qui s’évaporent au cours du temps (elles s’éclaircissent).Les petits tas vert foncé représentent de la nourriture dans laquelle les fourmispeuvent 
-aller puiser.
 
 > **Remarque** 
 >
