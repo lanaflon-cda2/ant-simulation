@@ -1,7 +1,10 @@
-# 1. Description de l'application
+# Description de l'application
+				
 Le thème du projet est la simulation de colonies d’insectes sociaux et plus précisément celui de fourmilières. La notion d’intelligence collective constitut tout l'intérêt de cette thématique : chaque membre de la colonie n’obéit individuellement qu’à des règles comportementales très simples, mais il émerge de ces comportements simples une auto-organisation complexe et « intelligente » de la colonie, permettant typiquement la survie de la fourmilière dans notre cas.
 
 Le but du projet est donc de créer une application simulant des colonies de fourmis en quête de nourriture.
+
+![Aperçu du simulateur](https://drive.google.com/uc?id=128z92COAEp7Mwdr5dtNhLYrntOfNvyaz)
 Le modèle que nous proposons est simmplement constitué:
 - **d'un environnement**
 - **de fourmilières**
